@@ -1,11 +1,14 @@
 #Import Libraries
-import platform
-import subprocess
+import os
 import getpass
 import time
+import json
+
+# File paths
+user_data = 'dat/login_info.json'
 
 # Global Variables
-users_information = {'Hello':'123'}
+users_information = json.load(open(user_data))
 
 # Script Classes
 class Color:
@@ -13,11 +16,8 @@ class Color:
     NORMAL = '\033[97m'
 # Define script functions
 def clear_screen() -> None:
-    # I use linux so it checks if ur on windows or linux and clears the previous text from the terminal
-    if platform.system() == 'Linux':
-        subprocess.run('clear')
-    else:
-        subprocess.run('cls')
+    # I use linux so it checks if ur on Windows or linux and clears the previous text from the terminal
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 def login_page() -> None:
     clear_screen()
@@ -51,5 +51,25 @@ def login_page() -> None:
             time.sleep(3)
             login_page()
 
-
+    if u_input == '2':
+        clear_screen()
+        print('=========================================================================\nCREATE AN ACCOUNT')
+        username_i: str = input('\nUSERNAME: ')
+        password_i: str = getpass.getpass('PASSWORD: ')
+        print('=========================================================================\nGETTING TO KNOW YOU')
+        dob: str = input('\nDate of Birth: ')
+        fav_artist: str = input('\nFavorite Artist: ')
+        fav_genre: str = input('\nFavorite Genre: ')
+        try:
+            print('Setting up your account now...')
+            users_information[username_i] = password_i
+            # json.dumps converts a python dictionary into json format so it can be written
+            convert = json.dumps(users_information)
+            with open (user_data, 'w') as file:
+                file.write(convert)
+                file.close()
+        except KeyError:
+            print('Error during account creation')
+            time.sleep(3)
+            login_page()
 login_page()
