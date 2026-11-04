@@ -15,6 +15,19 @@ class Color:
     WARNING = '\033[31m'
     NORMAL = '\033[97m'
 # Define script functions
+def home_page():
+    clear_screen()
+    print(f'''{Color.NORMAL}██╗  ██╗ ██████╗ ███╗   ███╗███████╗
+██║  ██║██╔═══██╗████╗ ████║██╔════╝
+███████║██║   ██║██╔████╔██║█████╗  
+██╔══██║██║   ██║██║╚██╔╝██║██╔══╝  
+██║  ██║╚██████╔╝██║ ╚═╝ ██║███████╗
+╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝
+                                    ''')
+    print('=========================================================================')
+    print('1. Library\n2. Playlists\n3. Settings')
+    print('=========================================================================')
+
 def clear_screen() -> None:
     # I use linux so it checks if ur on Windows or linux and clears the previous text from the terminal
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -40,8 +53,10 @@ def login_page() -> None:
         username_i: str = input('\nUSERNAME: ')
         password_i: str = getpass.getpass('PASSWORD: ')
         try:
-            if users_information[username_i] == password_i:
-                print('Success!')
+            if users_information[username_i][0] == password_i:
+                print('\nSuccess!')
+                time.sleep(1)
+                home_page()
             else:
                 print(f'\n{Color.WARNING}Password does not match!')
                 time.sleep(3)
@@ -62,7 +77,8 @@ def login_page() -> None:
         fav_genre: str = input('\nFavorite Genre: ')
         try:
             print('Setting up your account now...')
-            users_information[username_i] = password_i
+            # Writes a list into the dictionary key so multiple values can be stored in one key
+            users_information[username_i] = [password_i, dob, fav_artist, fav_genre]
             # json.dumps converts a python dictionary into json format so it can be written
             convert = json.dumps(users_information)
             with open (user_data, 'w') as file:
