@@ -4,8 +4,12 @@ import getpass
 import time
 import json
 
+import tinytag
+from tinytag import TinyTag
+
 # File paths
 user_data = 'dat/login_info.json'
+music_folder = 'dat/music'
 
 # Global Variables
 users_information = json.load(open(user_data))
@@ -27,6 +31,17 @@ def home_page():
     print('=========================================================================')
     print('1. Library\n2. Playlists\n3. Settings')
     print('=========================================================================')
+    user_input = input()
+    if user_input == '1':
+        clear_screen()
+        print('Downloaded Songs: ')
+        if not os.listdir(music_folder):
+            print(f'{Color.WARNING}\nNo Music Found!')
+        else:
+            for i in os.listdir(music_folder):
+                info = TinyTag.get(f'{music_folder}/{i}')
+                print(info.title)
+
 
 def clear_screen() -> None:
     # I use linux so it checks if ur on Windows or linux and clears the previous text from the terminal
