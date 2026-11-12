@@ -33,14 +33,21 @@ def home_page():
     print('=========================================================================')
     user_input = input()
     if user_input == '1':
+        count:int = 0
         clear_screen()
         print('Downloaded Songs: ')
         if not os.listdir(music_folder):
             print(f'{Color.WARNING}\nNo Music Found!')
         else:
             for i in os.listdir(music_folder):
+                # Make sure music has metadata for the program to identify!
+                count += 1
                 info = TinyTag.get(f'{music_folder}/{i}')
-                print(info.title)
+                if str(info.title) == 'None':
+                    print(f'{count}.{i.replace('.mp3', '')}, Error loading song')
+                else:
+                    minutes, seconds = divmod(info.duration, 60)
+                    print(f'{count}.{info.title} by {info.artist} - {minutes:.0f}:{seconds:.0f}')
 
 
 def clear_screen() -> None:
